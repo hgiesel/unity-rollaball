@@ -6,12 +6,15 @@ using UnityEngine;
 public class HoleMesh : MonoBehaviour {
 	
 	public Mesh mesh;
+	public MeshCollider meshc;
 
 	Vector3[] vertices;
 	int[] triangles;
 
 	void Awake() {
 		mesh = GetComponent<MeshFilter> ().mesh;
+		meshc = gameObject.AddComponent (typeof(MeshCollider)) as MeshCollider;
+		meshc.sharedMesh = mesh;
 	}
 
 	// Use this for initialization
@@ -24,8 +27,6 @@ public class HoleMesh : MonoBehaviour {
 			new Vector3 (1, 0, 0), new Vector3 (0, 0, 0), new Vector3 (0, 0, 1), 
 			new Vector3 (0, 0, 2), new Vector3 (1, 0, 2), new Vector3 (2, 0, 2),   
 			new Vector3 (2, 0, 1), new Vector3 (2, 0, 0), new Vector3 (1, 0, 0)
-
-
 		};
 					
 		triangles = new int[] {

@@ -8,7 +8,13 @@ public class PlayerController : MonoBehaviour {
 	public float speed;
 	public Text countText;
 	public Text winText;
+	public Text infoText;
+	public Text infoTextFoo;
 
+
+
+	bool pastPointOfNoReturn = false;
+	int goingBackTo = 0;
 
 
 	Rigidbody rb;
@@ -22,9 +28,65 @@ public class PlayerController : MonoBehaviour {
 		winText.text = "";
 	}
 
+
 	// Update is called once per frame
 	void Update () {
 
+		if (Application.loadedLevelName == "ChooseLevel") {
+
+			if (transform.position.y >= 0) {
+				infoTextFoo.text = "← quit game                      first level →";
+			} else {
+				infoTextFoo.text = "";
+			};
+
+
+			if (transform.position.y < -5) {
+
+				if (transform.position.x > 0) {
+					winText.text = "Going to first level";
+
+					if (transform.position.y < -20) {
+						Application.LoadLevel ("MiniGame");
+					}
+				} else {
+
+					winText.text = "Goodbye!";
+
+					if (transform.position.y < -20) {
+						Application.Quit ();
+					}
+
+				}
+			}
+
+		} else {
+
+			if (transform.position.z < -10 && transform.position.z > -14.4
+				&& transform.position.x > 3 && transform.position.x < 9.68 && transform.position.y >= 0) {
+				infoText.text = "Jump off cliff here to return to main menu →";
+			} else {
+				infoText.text = "";
+			}
+
+			if (transform.position.y < -5 && !pastPointOfNoReturn) {
+
+				if (transform.position.x > 5 && transform.position.z < -8 && transform.position.z > -15) {
+					pastPointOfNoReturn = true;
+					winText.text = "Going to main menu";
+					goingBackTo = 0; // ChooseLevel
+				} else {
+					
+					pastPointOfNoReturn = true;
+					winText.text = "Oh no :( Try again";
+					goingBackTo = Application.loadedLevel;
+				}
+			}
+		    if (transform.position.y < -20) {
+				pastPointOfNoReturn = false;
+			 	Application.LoadLevel (goingBackTo);
+			}
+		}
 	}
 
 	void FixedUpdate () {
@@ -36,7 +98,7 @@ public class PlayerController : MonoBehaviour {
 
 	void SetCountText(int count) {
 		string myText = count.ToString ();
-		countText.text = "Count: " + myText;
+		countText.text = "Count: " + myText + " / 8";
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -45,9 +107,10 @@ public class PlayerController : MonoBehaviour {
 			pointCount++;
 			SetCountText (pointCount);
 
-			if (pointCount >= 6) {
+			if (pointCount >= 8) {
 				winText.text = "YOU WIN!";
 			}
+		
 		}
 	}
 }

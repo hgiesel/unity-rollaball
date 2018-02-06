@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour {
 
@@ -11,9 +12,8 @@ public class PlayerController : MonoBehaviour {
 	public Text infoText;
 	public Text infoTextFoo;
 
-
-
 	bool pastPointOfNoReturn = false;
+	bool wonGame = false;
 	int goingBackTo = 0;
 
 
@@ -31,8 +31,7 @@ public class PlayerController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
-		if (Application.loadedLevelName == "ChooseLevel") {
+		if (SceneManager.GetActiveScene().name == "ChooseLevel") {
 
 			if (transform.position.y >= 0) {
 				infoTextFoo.text = "← quit game                      first level →";
@@ -47,7 +46,7 @@ public class PlayerController : MonoBehaviour {
 					winText.text = "Going to first level";
 
 					if (transform.position.y < -20) {
-						Application.LoadLevel ("MiniGame");
+						SceneManager.LoadScene ("MiniGame");
 					}
 				} else {
 
@@ -78,13 +77,20 @@ public class PlayerController : MonoBehaviour {
 				} else {
 					
 					pastPointOfNoReturn = true;
-					winText.text = "Oh no :( Try again";
-					goingBackTo = Application.loadedLevel;
+
+					if (wonGame) {
+
+						winText.text = "You've done great!";
+						goingBackTo = 0; // ChooseLevel
+					} else {
+						winText.text = "Oh no :( Try again";
+						goingBackTo = SceneManager.GetActiveScene ().buildIndex;
+					}
 				}
 			}
 		    if (transform.position.y < -20) {
 				pastPointOfNoReturn = false;
-			 	Application.LoadLevel (goingBackTo);
+			 	SceneManager.LoadScene (goingBackTo);
 			}
 		}
 	}
@@ -92,8 +98,19 @@ public class PlayerController : MonoBehaviour {
 	void FixedUpdate () {
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
-		Vector3 movement = new Vector3 (moveHorizontal, 0.0f, moveVertical);
+
+		float altMoveHorizontal = Input.acceleration.x;
+		float altMoveVertical = Input.acceleration.y;
+
+		Vector3 movement    = new Vector3 (moveHorizontal, 0.0f, moveVertical);
+		Vector3 altMovement = new Vector3 (altMoveHorizontal, 0.0f, altMoveVertical); 
+
+		if (transform.position.x < -9 && transform.position.x > -10 && transform.position.z > 4 && transform.position.z < 5) {
+			rb.AddForce (speed * new Vector3(0.0f, 1f, 0.0f));
+		}
+
 		rb.AddForce (speed * movement);
+		rb.AddForce (speed * altMovement);
 	}
 
 	void SetCountText(int count) {
@@ -108,7 +125,8 @@ public class PlayerController : MonoBehaviour {
 			SetCountText (pointCount);
 
 			if (pointCount >= 8) {
-				winText.text = "YOU WIN!";
+				winText.text = "YOU WIN! Fall down anywhere to return to main menu.";
+				wonGame = true;
 			}
 		
 		}

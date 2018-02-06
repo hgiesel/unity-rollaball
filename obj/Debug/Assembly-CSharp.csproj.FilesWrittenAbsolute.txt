@@ -52,3 +52,5 @@
 /Users/hgiesel/Sync/FRA-UAS/Roll-a-ball/Temp/bin/Debug/Unity.Cecil.Mdb.dll
 /Users/hgiesel/Sync/FRA-UAS/Roll-a-ball/Temp/bin/Debug/Assembly-CSharp.dll.mdb
 /Users/hgiesel/Sync/FRA-UAS/Roll-a-ball/Temp/bin/Debug/Assembly-CSharp.dll
+/Users/hgiesel/Sync/FRA-UAS/Roll-a-ball/Temp/bin/Debug/ChannelPurchase.dll
+/Users/hgiesel/Sync/FRA-UAS/Roll-a-ball/Temp/bin/Debug/UnityStore.dll

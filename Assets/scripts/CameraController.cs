@@ -10,6 +10,9 @@ public class CameraController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		offset = transform.position - player.transform.position;
+		Screen.orientation = ScreenOrientation.LandscapeLeft;
+		Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
 	}
 	
 	// Update is called once per frame
